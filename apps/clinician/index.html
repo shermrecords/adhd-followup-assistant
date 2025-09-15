@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Clinician Portal</title>
+  <style>
+    :root {
+      --bg: #0b1020; --panel:#0f1630; --panel-2:#131a33; --text:#e9ecf8; --muted:#a7b0d9;
+      --brand:#5a7bff; --border:#1b2547; --shadow:0 10px 30px rgba(0,0,0,.35); --radius:16px;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:radial-gradient(60% 80% at 70% 10%, #10183a 0%, #0b1020 50%);color:var(--text);
+         font:16px/1.5 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;}
+    header{position:sticky;top:0;background:rgb(11 16 32 /.6);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+    .bar{max-width:1100px;margin:0 auto;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+    .brand{font-weight:800;letter-spacing:.3px}
+    main{max-width:1100px;margin:0 auto;padding:20px;display:grid;grid-template-columns:320px 1fr;gap:16px}
+    .panel{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px}
+    .list .item{padding:10px;border:1px solid var(--border);border-radius:12px;margin:8px 0;cursor:pointer;background:#111739}
+    .list .item:hover{border-color:var(--brand)}
+    textarea{width:100%;height:220px;padding:12px;border-radius:12px;border:1px solid var(--border);background:#0c1430;color:var(--text)}
+    button{padding:10px 16px;border-radius:12px;border:0;background:linear-gradient(180deg,#6f8aff,#506af7);color:#fff;font-weight:700;cursor:pointer;box-shadow:0 10px 24px rgb(80 106 247 /.35)}
+    button:hover{filter:brightness(1.05)}
+    pre{background:#0c1430;border:1px solid var(--border);border-radius:12px;padding:10px;overflow:auto}
+    .muted{color:var(--muted)}
+  </style>
+</head>
+<body>
+  <header><div class="bar"><div class="brand">Clinician Portal</div><div class="muted">Local Demo</div></div></header>
+  <main>
+    <section class="panel">
+      <h3>Patients</h3>
+      <div id="patients" class="list"></div>
+    </section>
+    <section class="panel">
+      <h3 id="pname">Select a patient</h3>
+      <h4>Care Plan</h4>
+      <textarea id="plan" placeholder="YAML plan..."></textarea><br>
+      <button id="save">Save Plan</button>
+      <h4>Messages</h4>
+      <div id="msgs"></div>
+    </section>
+  </main>
+  <script>
+    const api = "http://localhost:8000/v1/clinician";
+    const $ = (q)=>document.querySelector(q);
+
+    async function listPatients(){
+      const r = await fetch(api + "/patients");
+      const arr = await r.json();
+      const root = $("#patients"); root.innerHTML = "";
+      if (!arr.length) { root.innerHTML = "<div class='muted'>No patients yet.</div>"; return; }
+      arr.forEach(p => {
+        const d = document.createElement("div");
+        d.className = "item";
+        d.textContent = p;
+        d.onclick = ()=>loadPatient(p);
+        root.appendChild(d);
+      });
+    }
+
+    async function loadPatient(pid){
+      $("#pname").textContent = pid;
+      const [msgs, plan] = await Promise.all([
+        fetch(api + "/patient/" + pid + "/messages").then(r=>r.json()),
+        fetch(api + "/patient/" + pid + "/plan").then(r=>r.json())
+      ]);
+      $("#plan").value = plan.plan || "";
+      const mroot = $("#msgs"); mroot.innerHTML = "";
+      msgs.forEach(m => {
+        const row = document.createElement("div");
+        row.innerHTML = "<b>" + m.role + ":</b> " + m.text + " <span class='muted'>(" + m.timestamp + ")</span>";
+        mroot.appendChild(row);
+      });
+      $("#save").onclick = async () => {
+        await fetch(api + "/patient/" + pid + "/plan", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ yaml: $("#plan").value }) });
+        alert("Plan saved.");
+      };
+    }
+
+    listPatients();
+  </script>
+</body>
+</html>

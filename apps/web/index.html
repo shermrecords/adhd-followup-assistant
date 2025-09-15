@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ADHD Assistant — Welcome</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #0f1630;
+      --panel-2: #131a33;
+      --text: #e9ecf8;
+      --muted: #a7b0d9;
+      --brand: #5a7bff;
+      --ring: #2b3a6d;
+      --border: #1b2547;
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; display: grid; place-items: center;
+      background: radial-gradient(60% 80% at 70% 10%, #10183a 0%, #0b1020 50%);
+      color: var(--text); font: 16px/1.5 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    }
+    .card {
+      width: min(480px, 92vw); background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 28px; animation: pop .35s ease-out;
+    }
+    h1 { margin: 0 0 6px; font-size: 22px; letter-spacing: .2px; }
+    p { margin: 0 0 14px; color: var(--muted); }
+    .row { display: grid; gap: 12px; margin-top: 10px; }
+    input {
+      padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border);
+      background: #0c1430; color: var(--text); outline: none;
+    }
+    input:focus { border-color: var(--ring); box-shadow: 0 0 0 3px rgb(90 123 255 / .25); }
+    button {
+      padding: 12px 16px; border-radius: 12px; border: 0; cursor: pointer;
+      background: linear-gradient(180deg, #6f8aff, #506af7); color: white; font-weight: 600;
+      letter-spacing: .2px; box-shadow: 0 8px 20px rgb(80 106 247 / .35);
+    }
+    button:hover { filter: brightness(1.05); }
+    @keyframes pop { from { transform: translateY(8px); opacity: .0 } to { transform: translateY(0); opacity: 1 } }
+    footer { position: fixed; bottom: 14px; width: 100%; text-align: center; color: #8ea2e6; font-size: 12px; opacity: .8 }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <h1>Welcome</h1>
+    <p>Tell me your name so I can personalize your assistant.</p>
+    <div class="row">
+      <input id="name" placeholder="Your name" autocomplete="name" />
+      <button id="go">Start</button>
+    </div>
+  </main>
+  <footer>ADHD Follow‑Up Assistant — Local Demo</footer>
+  <script>
+    const $ = (q)=>document.querySelector(q);
+    $("#go").onclick = () => {
+      const name = $("#name").value.trim();
+      if (!name) return $("#name").focus();
+      localStorage.setItem("patient_id", name.toLowerCase());
+      localStorage.setItem("patient_display", name);
+      location.href = "chat.html";
+    };
+    $("#name").addEventListener("keydown",(e)=>{ if(e.key==="Enter") $("#go").click(); });
+  </script>
+</body>
+</html>
