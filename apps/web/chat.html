@@ -146,7 +146,7 @@
 
   <script>
     const $ = (q)=>document.querySelector(q);
-    const api = "http://localhost:8000";
+    const api = "https://adhd-followup-assistant.onrender.com";
     const patient_id = localStorage.getItem("patient_id");
     const patient_display = localStorage.getItem("patient_display") || patient_id;
     if (!patient_id) location.href = "index.html";
