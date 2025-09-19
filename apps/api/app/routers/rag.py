@@ -11,7 +11,7 @@ import docx
 router = APIRouter()
 
 # Setup Chroma client (persistent DB in ./rag_store)
-CHROMA_PATH = "./rag_store"
+CHROMA_PATH = "/opt/render/project/src/rag_store"
 os.makedirs(CHROMA_PATH, exist_ok=True)
 
 client = chromadb.PersistentClient(path=CHROMA_PATH)
