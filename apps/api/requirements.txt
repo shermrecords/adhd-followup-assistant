@@ -1,6 +1,18 @@
-fastapi>=0.111.0
-uvicorn[standard]>=0.30.0
-pydantic>=2.6.0
-PyYAML>=6.0.1
-python-multipart>=0.0.9
-httpx>=0.27.0
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+
+# Together client (for connecting to Together.ai models)
+together==1.3.2
+
+# Vector DB
+chromadb==0.5.5
+
+# Document parsing
+PyPDF2==3.0.1
+python-docx==1.1.2
+
+# For CORS (frontend → backend)
+starlette==0.37.2
+
+# Optional but nice for .env support
+python-dotenv==1.0.1
