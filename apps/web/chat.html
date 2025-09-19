@@ -27,6 +27,15 @@
       flex-direction: column;
       height: 100vh;
     }
+    .links a {
+      color: var(--brand);
+      margin-left: 20px;
+      font-size: 14px;
+      text-decoration: none;
+    }
+    .links a:hover {
+      text-decoration: underline;
+    }
     header {
       position: sticky; top: 0;
       backdrop-filter: blur(8px);
@@ -122,6 +131,9 @@
   <header>
     <div class="bar">
       <div class="brand">ADHD Assistant</div>
+      <div class="links">
+        <a href="rag.html">Knowledge Upload</a>
+      </div>
       <div class="who" id="who"></div>
     </div>
   </header>
