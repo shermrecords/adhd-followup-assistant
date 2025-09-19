@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers import chat, plans, ingest, clinician
 from dotenv import load_dotenv
+from app.routers import rag
 load_dotenv()
 
 app = FastAPI(title="ADHD Follow-Up API (Local)")
@@ -18,6 +19,8 @@ app.include_router(chat.router, prefix="/v1")
 app.include_router(plans.router, prefix="/v1")
 app.include_router(ingest.router, prefix="/v1")
 app.include_router(clinician.router, prefix="/v1/clinician")
+app.include_router(rag.router, prefix="/v1")
+
 
 @app.get("/health")
 def health():
